@@ -18,7 +18,7 @@ package controllers
 
 import (
 	"context"
-
+	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -46,10 +46,25 @@ type MemcachedReconciler struct {
 //
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.8.3/pkg/reconcile
-func (r *MemcachedReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+func (r *MemcachedReconciler) Reconcile(ctx context.Context, req ctrl.Request) (result ctrl.Result, err error) {
 	_ = log.FromContext(ctx)
 
 	// your logic here
+	log.Log.Info("enter into MemcachedReconciler")
+
+	mem := &cachev1alpha1.Memcached{}
+	err = r.Get(ctx, req.NamespacedName, mem)
+	if err != nil {
+		if errors.IsNotFound(err) {
+			log.Log.Info("Memcached CR was not found")
+			err = nil
+			return
+		}
+		// Error reading the object - requeue the req.
+		return
+	}
+
+	log.Log.Info(req.Name + ": " + mem.Spec.Foo)
 
 	return ctrl.Result{}, nil
 }
