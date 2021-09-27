@@ -53,7 +53,7 @@ endif
 SHELL = /usr/bin/env bash -o pipefail
 .SHELLFLAGS = -ec
 
-all: docker-build docker-push deploy
+all: docker-build docker-push 
 
 ##@ General
 
