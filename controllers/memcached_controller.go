@@ -67,8 +67,9 @@ func (r *MemcachedReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	}
 
 	log.Info("memcached CR spec Foo: " + mem.Spec.Foo)
+	mem.Status.State = mem.Spec.Foo
 
-	return ctrl.Result{}, nil
+	return ctrl.Result{}, r.Status().Update(ctx, mem)
 }
 
 // SetupWithManager sets up the controller with the Manager.
