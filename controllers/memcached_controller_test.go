@@ -1,92 +1,129 @@
+/*
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+// +kubebuilder:docs-gen:collapse=Apache License
+
+/*
+Ideally, we should have one `<kind>_controller_test.go` for each controller scaffolded and called in the `suite_test.go`.
+So, let's write our example test for the memcached controller (`memcached_controller_test.go.`)
+*/
+
+/*
+As usual, we start with the necessary imports. We also define some utility variables.
+*/
 package controllers
 
 import (
+	"context"
 	"time"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"sigs.k8s.io/controller-runtime/pkg/client"
-
-	"context"
-
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-
 	"k8s.io/apimachinery/pkg/types"
 
-	cachev1alpha1 "github.com/example/memcached-operator/api/v1alpha1"
+	memcachedv1 "github.com/example/memcached-operator/api/v1alpha1"
 )
 
-const timeout = time.Second * 30
-const interval = time.Millisecond * 250
+// +kubebuilder:docs-gen:collapse=Imports
 
-func CreateFusionObj(obj client.Object, createdObj client.Object) {
-	k8sClient.Create(context.TODO(), obj)
-	Eventually(func() bool {
-		err := k8sClient.Get(context.TODO(), types.NamespacedName{Name: obj.GetName(), Namespace: obj.GetNamespace()}, createdObj)
-		return err == nil
-	}, timeout, interval).Should(BeTrue())
-}
+/*
+The first step to writing a simple integration test is to actually create an instance of memcached you can run tests against.
+Note that to create a memcached, you’ll need to create a stub memcached struct that contains your memcached’s specifications.
 
-func DeleteFusionObj(objName string, objNs string, obj client.Object) {
-	Eventually(func() bool {
-		err := k8sClient.Get(context.TODO(), types.NamespacedName{Name: objName, Namespace: objNs}, obj)
-		if err == nil {
-			k8sClient.Delete(context.TODO(), obj)
-		}
-		return err != nil
-	}, timeout, interval).Should(BeTrue())
-}
+Note that when we create a stub memcached, the memcached also needs stubs of its required downstream objects.
+Without the stubbed Job template spec and the Pod template spec below, the Kubernetes API will not be able to
+create the memcached.
+*/
+var _ = Describe("memcached controller:", func() {
 
-func InitMemcached() *cachev1alpha1.Memcached {
-	return &cachev1alpha1.Memcached{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      "memcached1",
-			Namespace: "testabc",
-		},
-		Spec: cachev1alpha1.MemcachedSpec{
-			Foo: "bar1",
-		},
-	}
-}
+	// Define utility constants for object names and testing timeouts/durations and intervals.
+	const (
+		memcachedName      = "test-memcached"
+		memcachedNamespace = "default"
+		FooValue           = "bar3"
 
-var _ = Describe("Test MemcachedController", func() {
+		timeout  = time.Second * 10
+		duration = time.Second * 10
+		interval = time.Millisecond * 250
+	)
 
-	//mem := &cachev1alpha1.Memcached{}
+	Context("When creating memcached >", func() {
 
-	Context("When testing memcached", func() {
-		// BeforeEach(func() {
-		// 	By("Creating a memcached")
-		//..CreateFusionObj(InitMemcached(), mem)
-		// })
+		It("Should update memcached status >", func() {
+			By("By creating a new memcached")
+			ctx := context.Background()
+			memcached := &memcachedv1.Memcached{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      memcachedName,
+					Namespace: memcachedNamespace,
+				},
+				Spec: memcachedv1.MemcachedSpec{
+					Foo: FooValue,
+				},
+			}
+			Expect(k8sClient.Create(ctx, memcached)).Should(Succeed())
 
-		// AfterEach(func() {
-		// 	By("Deleting the memcached")
-		// 	DeleteFusionObj("memcached1", "testabc", mem)
-		// })
+			memcachedLookupKey := types.NamespacedName{Name: memcachedName, Namespace: memcachedNamespace}
+			createdmemcached := &memcachedv1.Memcached{}
 
-		Context("When mem created", func() {
-			// It("mem is created", func() {
+			// We'll need to retry getting this newly created memcached, given that creation may not immediately happen.
+			By("By checking the new memcached")
+			Eventually(func() bool {
+				err := k8sClient.Get(ctx, memcachedLookupKey, createdmemcached)
+				if err != nil {
+					return false
+				}
+				return err == nil && createdmemcached.Status.State == FooValue
 
-			// 	found := &cachev1alpha1.Memcached{}
+			}, timeout, interval).Should(BeTrue())
+			Expect(createdmemcached.Status.State).Should(Equal(FooValue))
 
-			// 	By("Finding the created mem")
-			// 	Eventually(func() bool {
-			// 		err := k8sClient.Get(context.TODO(), types.NamespacedName{Name: "memcached1", Namespace: "testabc"}, found)
-			// 		return err == nil
-			// 	}, timeout, interval).Should(BeTrue())
+		})
+		It("Should update memcached status EMPTY >", func() {
+			memcachedName1 := "test-memcached1"
+			By("By creating a new memcached")
+			ctx := context.Background()
+			memcached := &memcachedv1.Memcached{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      memcachedName1,
+					Namespace: memcachedNamespace,
+				},
+				Spec: memcachedv1.MemcachedSpec{},
+			}
+			Expect(k8sClient.Create(ctx, memcached)).Should(Succeed())
 
-			// 	// By("Querying the created fusion bsl parameters")
-			// 	// Expect(found.Status.State).Should(Equal("bar1"))
-			// })
+			memcachedLookupKey := types.NamespacedName{Name: memcachedName1, Namespace: memcachedNamespace}
+			createdmemcached := &memcachedv1.Memcached{}
 
-			It("should be equal", func() {
-				Expect("foo").To(Equal("foo"))
-			})
+			// We'll need to retry getting this newly created memcached, given that creation may not immediately happen.
+			By("By checking the new memcached")
+			Eventually(func() bool {
+				err := k8sClient.Get(ctx, memcachedLookupKey, createdmemcached)
+				if err != nil {
+					return false
+				}
+				return err == nil && createdmemcached.Status.State == EMPTY
+
+			}, timeout, interval).Should(BeTrue())
+			Expect(createdmemcached.Status.State).Should(Equal(EMPTY))
 
 		})
 	})
+
 })
 
-func Add(a, b int) int {
-	return a + b
-}
+/*
+	After writing all this code, you can run `go test ./...` in your `controllers/` directory again to run your new test!
+*/

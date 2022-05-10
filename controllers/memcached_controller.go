@@ -34,6 +34,8 @@ type MemcachedReconciler struct {
 	Scheme *runtime.Scheme
 }
 
+const EMPTY = "EMPTY"
+
 //+kubebuilder:rbac:groups=cache.example.com,resources=memcacheds,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=cache.example.com,resources=memcacheds/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=cache.example.com,resources=memcacheds/finalizers,verbs=update
@@ -66,8 +68,14 @@ func (r *MemcachedReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		return
 	}
 
-	log.Info("memcached CR spec Foo: " + mem.Spec.Foo)
-	mem.Status.State = mem.Spec.Foo
+	value := mem.Spec.Foo
+	log.Info("memcached CR spec Foo: " + value)
+
+	if value != "" {
+		mem.Status.State = mem.Spec.Foo
+	} else {
+		mem.Status.State = EMPTY
+	}
 
 	return ctrl.Result{}, r.Status().Update(ctx, mem)
 }
