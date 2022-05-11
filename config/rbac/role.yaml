@@ -7,6 +7,21 @@ metadata:
   name: manager-role
 rules:
 - apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
   - cache.example.com
   resources:
   - memcacheds
@@ -32,3 +47,19 @@ rules:
   - get
   - patch
   - update
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  creationTimestamp: null
+  name: manager-role
+  namespace: test
+rules:
+- apiGroups:
+  - cache.example.com
+  resources:
+  - memcacheds
+  verbs:
+  - get
+  - list

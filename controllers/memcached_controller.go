@@ -18,14 +18,23 @@ package controllers
 
 import (
 	"context"
+	"fmt"
 
+	//metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"sigs.k8s.io/controller-runtime/pkg/client/config"
+
+	corev1 "k8s.io/api/core/v1"
+	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/rest"
+
+	cachev1alpha1 "github.com/example/memcached-operator/api/v1alpha1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	ctrllog "sigs.k8s.io/controller-runtime/pkg/log"
-
-	cachev1alpha1 "github.com/example/memcached-operator/api/v1alpha1"
 )
 
 // MemcachedReconciler reconciles a Memcached object
@@ -36,9 +45,15 @@ type MemcachedReconciler struct {
 
 const EMPTY = "EMPTY"
 
+var Mgr_client client.Client
+
 //+kubebuilder:rbac:groups=cache.example.com,resources=memcacheds,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=cache.example.com,resources=memcacheds/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=cache.example.com,resources=memcacheds/finalizers,verbs=update
+
+//+kubebuilder:rbac:groups=cache.example.com,namespace=test,resources=memcacheds,verbs=get;list;
+//+kubebuilder:rbac:groups="",resources=pods,verbs=get;list;watch
+//+kubebuilder:rbac:groups="",resources=configmaps,verbs=get;list;
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -75,6 +90,90 @@ func (r *MemcachedReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		mem.Status.State = mem.Spec.Foo
 	} else {
 		mem.Status.State = EMPTY
+	}
+
+	mem1 := &cachev1alpha1.Memcached{}
+	namespacedName := types.NamespacedName{
+		Namespace: "test",
+		Name:      "t1",
+	}
+	err = r.Get(ctx, namespacedName, mem1)
+	if err != nil {
+		if errors.IsNotFound(err) {
+			log.Info("memcached CR was not found: t1")
+		}
+		// Error reading the object - requeue the req.
+	} else {
+		log.Info("found mem1: " + mem1.Spec.Foo)
+	}
+
+	//方法1. 去拿别的ns的pod
+	pod1 := &corev1.Pod{}
+	namespacedName = types.NamespacedName{
+		Namespace: "test",
+		Name:      "alpine",
+	}
+	err = r.Get(ctx, namespacedName, pod1)
+	if err != nil {
+		if errors.IsNotFound(err) {
+			log.Info("pod alpine in test ns was not found ========1")
+		}
+		// Error reading the object - requeue the req.
+	} else {
+		log.Info("pod alpine in test ns is found !!!  ========1")
+	}
+
+	//方法2. 去拿别的ns的pod
+	pod2 := &corev1.Pod{}
+	namespacedName = types.NamespacedName{
+		Namespace: "test",
+		Name:      "alpine",
+	}
+	err = Mgr_client.Get(ctx, namespacedName, pod2)
+	if err != nil {
+		if errors.IsNotFound(err) {
+			log.Info("pod alpine in test ns was not found ========2")
+		}
+		// Error reading the object - requeue the req.
+	} else {
+		log.Info("pod alpine in test ns is found !!! ========2")
+	}
+
+	//方法3. 去拿别的ns的pod
+	cfg, err := config.GetConfig()
+	if err != nil {
+		fmt.Println(err)
+	}
+	c, err := client.New(cfg, client.Options{})
+	if err != nil {
+		fmt.Println(err)
+	}
+	err = c.Get(ctx, namespacedName, pod2)
+	if err != nil {
+		if errors.IsNotFound(err) {
+			log.Info("pod alpine in test ns was not found again ========3")
+		}
+		// Error reading the object - requeue the req.
+	} else {
+		log.Info("pod alpine in test ns is found!!! ========3 ")
+	}
+
+	//方法4. 去拿别的ns的pod
+	//这个方法只能在k8s里运行，如果要本地运行，需要换个方法拿config.
+	configA, err := rest.InClusterConfig()
+	if err != nil {
+		return ctrl.Result{}, err
+	}
+	clientset, err := kubernetes.NewForConfig(configA)
+	if err != nil {
+		return ctrl.Result{}, err
+	}
+
+	pod, err := clientset.CoreV1().Pods("test").Get(context.TODO(), "alpine", metav1.GetOptions{})
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println("pod alpine in test ns is found!!! ========4", pod.Name)
 	}
 
 	return ctrl.Result{}, r.Status().Update(ctx, mem)

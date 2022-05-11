@@ -65,6 +65,7 @@ func main() {
 
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
+	//namespaces := []string{"default", "test"}
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
 		Scheme:                 scheme,
 		MetricsBindAddress:     metricsAddr,
@@ -72,11 +73,15 @@ func main() {
 		HealthProbeBindAddress: probeAddr,
 		LeaderElection:         enableLeaderElection,
 		LeaderElectionID:       "86f835c3.example.com",
+		Namespace:              "default",
+		//NewCache:               cache.MultiNamespacedCacheBuilder(namespaces),
 	})
 	if err != nil {
 		setupLog.Error(err, "unable to start manager")
 		os.Exit(1)
 	}
+
+	controllers.Mgr_client = mgr.GetClient()
 
 	if err = (&controllers.MemcachedReconciler{
 		Client: mgr.GetClient(),
