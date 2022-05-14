@@ -82,6 +82,7 @@ func main() {
 	}
 
 	controllers.Mgr_client = mgr.GetClient()
+	controllers.ApiReader = mgr.GetAPIReader()
 
 	if err = (&controllers.MemcachedReconciler{
 		Client: mgr.GetClient(),

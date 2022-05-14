@@ -46,6 +46,7 @@ type MemcachedReconciler struct {
 const EMPTY = "EMPTY"
 
 var Mgr_client client.Client
+var ApiReader client.Reader
 
 //+kubebuilder:rbac:groups=cache.example.com,resources=memcacheds,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=cache.example.com,resources=memcacheds/status,verbs=get;update;patch
@@ -158,15 +159,48 @@ func (r *MemcachedReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		log.Info("pod alpine in test ns is found!!! ========3 ")
 	}
 
+	mem2 := &cachev1alpha1.Memcached{}
+	namespacedName2 := types.NamespacedName{
+		Namespace: "test",
+		Name:      "t1",
+	}
+	err = c.Get(ctx, namespacedName2, mem2)
+	if err != nil {
+		if errors.IsNotFound(err) {
+			log.Info("cr t1 in test ns was not found  ========3-a")
+		} else {
+			fmt.Println(err, "=============== 3-a")
+		}
+
+		// Error reading the object - requeue the req.
+	} else {
+		log.Info("cr t1 in test ns is found!!! ========3-a ")
+	}
+
+	err = ApiReader.Get(ctx, namespacedName2, mem2)
+	if err != nil {
+		if errors.IsNotFound(err) {
+			log.Info("cr t1 in test ns was not found  ========3-b")
+		} else {
+			fmt.Println(err)
+		}
+
+		// Error reading the object - requeue the req.
+	} else {
+		log.Info("cr t1 in test ns is found!!! ========3-b")
+	}
+
 	//方法4. 去拿别的ns的pod
 	//这个方法只能在k8s里运行，如果要本地运行，需要换个方法拿config.
 	configA, err := rest.InClusterConfig()
 	if err != nil {
-		return ctrl.Result{}, err
+		fmt.Println("error get InClusterConfig config")
+		return ctrl.Result{}, nil
 	}
 	clientset, err := kubernetes.NewForConfig(configA)
 	if err != nil {
-		return ctrl.Result{}, err
+		fmt.Println("error NewForConfig")
+		return ctrl.Result{}, nil
 	}
 
 	pod, err := clientset.CoreV1().Pods("test").Get(context.TODO(), "alpine", metav1.GetOptions{})

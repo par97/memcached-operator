@@ -1,15 +1,5 @@
 make --dry-run --always-make --keep-going --print-directory
 make: Entering directory `/Users/par/code/memcached-operator'
-[ -f /Users/par/code/memcached-operator/bin/controller-gen ] || { set -e ; TMP_DIR=$(mktemp -d) ; cd $TMP_DIR ; go mod init tmp ; echo "Downloading sigs.k8s.io/controller-tools/cmd/controller-gen@v0.4.1" ; GOBIN=/Users/par/code/memcached-operator/bin go get sigs.k8s.io/controller-tools/cmd/controller-gen@v0.4.1 ; rm -rf $TMP_DIR ; }
-/Users/par/code/memcached-operator/bin/controller-gen "crd:trivialVersions=true,preserveUnknownFields=false" rbac:roleName=manager-role webhook paths="./..." output:crd:artifacts:config=config/crd/bases
- 
-/Users/par/code/memcached-operator/bin/controller-gen object:headerFile="hack/boilerplate.go.txt" paths="./..."
-go fmt ./...
-go vet ./...
- 
-mkdir -p /Users/par/code/memcached-operator/testbin
-test -f /Users/par/code/memcached-operator/testbin/setup-envtest.sh || curl -sSLo /Users/par/code/memcached-operator/testbin/setup-envtest.sh https://raw.githubusercontent.com/kubernetes-sigs/controller-runtime/v0.8.3/hack/setup-envtest.sh
-source /Users/par/code/memcached-operator/testbin/setup-envtest.sh; fetch_envtest_tools /Users/par/code/memcached-operator/testbin; setup_envtest_env /Users/par/code/memcached-operator/testbin; go test ./... -coverprofile cover.out
 docker build -t quay.io/jackluxm/memcached-operator:latest .
 docker push quay.io/jackluxm/memcached-operator:latest
 make: Leaving directory `/Users/par/code/memcached-operator'
