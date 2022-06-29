@@ -39,6 +39,7 @@ spec:
               foo:
                 description: Foo is an example field of Memcached. Edit memcached_types.go
                   to remove/update
+                pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
                 type: string
             type: object
           status:

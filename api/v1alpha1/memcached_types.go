@@ -29,6 +29,7 @@ type MemcachedSpec struct {
 	// Important: Run "make" to regenerate code after modifying this file
 
 	// Foo is an example field of Memcached. Edit memcached_types.go to remove/update
+	// +kubebuilder:validation:Pattern:=^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
 	Foo string `json:"foo,omitempty"`
 }
 

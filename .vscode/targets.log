@@ -8,37 +8,43 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This program built for i386-apple-darwin11.3.0
  
 
-# Make data base, printed on Fri May 13 21:17:25 2022
+# Make data base, printed on Wed Jun 29 14:15:46 2022
 
 # Variables
 
- 
 # automatic
 <D = $(patsubst %/,%,$(dir $<))
 # automatic
 ?F = $(notdir $?)
-# makefile (from `Makefile', line 54)
-.SHELLFLAGS = -ec
+# environment
+ELECTRON_NO_ATTACH_CONSOLE = 1
+# environment
+LC_CTYPE = UTF-8
 # environment
 VSCODE_LOG_NATIVE = false
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # makefile (from `Makefile', line 133)
-PROJECT_DIR := /Users/par/code/memcached-operator
+PROJECT_DIR := /Users/par/Github/par97/memcached-operator
 # automatic
 @D = $(patsubst %/,%,$(dir $@))
 # automatic
 @F = $(notdir $@)
 # makefile
-CURDIR := /Users/par/code/memcached-operator
+ 
+CURDIR := /Users/par/Github/par97/memcached-operator
 # makefile (from `Makefile', line 53)
 SHELL = /usr/bin/env bash -o pipefail
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
 # environment
 _ = /usr/bin/make
+# environment
+GITHUB_TOKEN = 4732b5f18ad96677a29661d020bcb3aaa391d1e9
 # makefile (from `Makefile', line 1)
 MAKEFILE_LIST :=  Makefile
+# environment
+GO111MODULE = auto
 # makefile (from `Makefile', line 162)
 OPM = ./bin/opm
 # environment
@@ -49,22 +55,26 @@ VERSION = 0.0.1
 VSCODE_VERBOSE_LOGGING = true
 # environment
 __CFBundleIdentifier = com.microsoft.VSCode
+# environment
+INFOPATH = /opt/homebrew/share/info:
 # makefile (from `Makefile', line 88)
 ENVTEST_ASSETS_DIR = $(shell pwd)/testbin
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/90/3zhxwxq94n9czqss_8w7f55m0000gn/T/vscode-ipc-ae95d38b-2bbc-4d54-ad72-4cb551fc5bcb.sock
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/pg/2_b16py52hgfm9qkqltp047c0000gn/T/vscode-ipc-cbbfe9c6-f262-4320-bf79-fca27c68093c.sock
 # environment
-VSCODE_CWD = /
+VSCODE_CWD = /Users/par/Github/project_fusion/isf-cns-operator
 # environment
-GOPROXY = https://proxy.golang.org,direct
+GOPROXY = direct
 # makefile (from `Makefile', line 134)
 go-get-tool = @[ -f $(1) ] || { set -e ; TMP_DIR=$$(mktemp -d) ; cd $$TMP_DIR ; go mod init tmp ; echo "Downloading $(2)" ; GOBIN=$(PROJECT_DIR)/bin go get $(2) ; rm -rf $$TMP_DIR ; }
 # environment
-PATH = /usr/local/go/bin:/usr/bin:/bin:/usr/sbin:/sbin
+PATH = /usr/local/go/bin:/Library/Frameworks/Python.framework/Versions/3.10/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/par/scripts:/Users/par/go/bin:/Users/par/openshift
+# environment
+GOROOT = /usr/local/go
+# environment
+LSCOLORS = ExGxBxDxCxEgEdxbxgxcxd
 # environment
 GOPATH = /Users/par/go
-# environment
-LaunchInstanceID = 10495BF7-5117-4A24-A07B-5EFA6C260405
 # environment
 VSCODE_LOG_STACK = false
 # environment
@@ -74,7 +84,7 @@ ELECTRON_RUN_AS_NODE = 1
 # makefile (from `Makefile', line 124)
 CONTROLLER_GEN = $(shell pwd)/bin/controller-gen
 # environment
-SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.FCmU4fwOYh/Listeners
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.et7smGIZYl/Listeners
 # makefile (from `Makefile', line 183)
 CATALOG_IMG = $(IMAGE_TAG_BASE)-catalog:v$(VERSION)
 # automatic
@@ -82,15 +92,19 @@ CATALOG_IMG = $(IMAGE_TAG_BASE)-catalog:v$(VERSION)
 # makefile (from `Makefile', line 45)
 GOBIN = $(shell go env GOPATH)/bin
 # environment
-DISPLAY = /private/tmp/com.apple.launchd.JWBeSvho2u/org.macosforge.xquartz:0
-# environment
 VSCODE_PIPE_LOGGING = true
 # makefile (from `Makefile', line 180)
 BUNDLE_IMGS = $(BUNDLE_IMG)
 # environment
-PWD = /Users/par/code/memcached-operator
+PWD = /Users/par/Github/par97/memcached-operator
+# environment
+HOMEBREW_CELLAR = /opt/homebrew/Cellar
+# environment
+ANT_HOME = /Users/par/Documents/apache-ant-1.10.9
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = undefined
+# environment
+MANPATH = /opt/homebrew/share/man::
 # environment
 GOMODCACHE = /Users/par/go/pkg/mod
 # environment
@@ -98,41 +112,55 @@ HOME = /Users/par
 # default
 MAKEFILEPATH = $(shell /usr/bin/xcode-select -print-path 2>/dev/null || echo /Developer)/Makefiles
 # environment
-VSCODE_CODE_CACHE_PATH = /Users/par/Library/Application Support/Code/CachedData/57fd6d0195bb9b9d1b49f6da5db789060795de47
+VSCODE_CLI = 1
+# environment
+VSCODE_CODE_CACHE_PATH = /Users/par/Library/Application Support/Code/CachedData/30d9c6cd9483b2cc586687151bcbcd635f373630
 # environment
 LOGNAME = par
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+# environment
+ZSH = /Users/par/.oh-my-zsh
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # automatic
 ^D = $(patsubst %/,%,$(dir $^))
 # environment
 XPC_FLAGS = 0x0
+# environment
+COLORTERM = truecolor
 # makefile (from `Makefile', line 41)
 CRD_OPTIONS = "crd:trivialVersions=true,preserveUnknownFields=false"
 # default
 MAKE = $(MAKE_COMMAND)
-# default
-MAKECMDGOALS := all
 # environment
-SHLVL = 1
+LC_TERMINAL = iTerm2
+# environment
+SHLVL = 3
 # default
 MAKE_VERSION := 3.81
 # environment
 USER = par
 # makefile
 .DEFAULT_GOAL := all
+# default
+MAKECMDGOALS := all
+# environment
+TERM_SESSION_ID = w0t2p0:1E606FC6-F7A5-41D7-B8D3-539E7C8720C4
+# environment
+LESS = -R
 # automatic
 %D = $(patsubst %/,%,$(dir $%))
 # default
 MAKE_COMMAND := /Library/Developer/CommandLineTools/usr/bin/make
 # makefile (from `Makefile', line 128)
 KUSTOMIZE = $(shell pwd)/bin/kustomize
+# environment
+TERM_PROGRAM = iTerm.app
 # default
 .VARIABLES := 
 # environment
-TMPDIR = /var/folders/90/3zhxwxq94n9czqss_8w7f55m0000gn/T/
+TMPDIR = /var/folders/pg/2_b16py52hgfm9qkqltp047c0000gn/T/
 # automatic
 *F = $(notdir $*)
 # makefile (from `Makefile', line 39)
@@ -140,7 +168,7 @@ IMG = $(IMAGE_TAG_BASE):latest
 # makefile (from `Makefile', line 25)
 BUNDLE_METADATA_OPTS = $(BUNDLE_CHANNELS) $(BUNDLE_DEFAULT_CHANNEL)
 # environment
-VSCODE_IPC_HOOK = /Users/par/Library/Application Support/Code/1.67.0-main.sock
+VSCODE_IPC_HOOK = /Users/par/Library/Application Support/Code/1.68.1-main.sock
 # makefile
 MAKEFLAGS = Rrqp
 # environment
@@ -148,25 +176,45 @@ MFLAGS = -Rrqp
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
 # environment
-XPC_SERVICE_NAME = application.com.microsoft.VSCode.81392434.81392440
+TERM_PROGRAM_VERSION = 3.4.15
+# makefile (from `Makefile', line 54)
+.SHELLFLAGS = -ec
+# environment
+XPC_SERVICE_NAME = application.com.microsoft.VSCode.4646831.4646837.0F77E73D-28D3-4533-8E48-BE891D7FD2DF
+# environment
+LC_TERMINAL_VERSION = 3.4.15
+# environment
+HOMEBREW_PREFIX = /opt/homebrew
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
 # automatic
 +F = $(notdir $+)
+# environment
+ITERM_SESSION_ID = w0t2p0:1E606FC6-F7A5-41D7-B8D3-539E7C8720C4
+# environment
+HOMEBREW_REPOSITORY = /opt/homebrew
+# environment
+COLORFGBG = 7;0
 # environment
 __CF_USER_TEXT_ENCODING = 0x1F5:0x0:0x0
 # environment
 COMMAND_MODE = unix2003
 # default
 MAKEFILES := 
+# environment
+HOMEBREW_NO_AUTO_UPDATE = 1
 # automatic
 <F = $(notdir $<)
+# environment
+ITERM_PROFILE = Default
+# environment
+GOPRIVATE = github.ibm.com/*
+# environment
+PAGER = less
 # makefile (from `Makefile', line 36)
 BUNDLE_IMG = $(IMAGE_TAG_BASE)-bundle:v$(VERSION)
 # environment
 LC_ALL = C
-# environment
-SECURITYSESSIONID = 186a9
 # automatic
 ^F = $(notdir $^)
 # default
@@ -180,10 +228,11 @@ MAKELEVEL := 0
 # environment
 LANG = C
 # environment
-VSCODE_PID = 679
+TERM = xterm-256color
+# environment
+VSCODE_PID = 21879
 # variable set hash-table stats:
-# Load=84/1024=8%, Rehash=0, Collisions=2/132=2%
- 
+# Load=109/1024=11%, Rehash=0, Collisions=7/157=4%
 
 # Pattern-specific Variable Values
 
@@ -191,8 +240,8 @@ VSCODE_PID = 679
 
 # Directories
 
-# ./bin (device 16777220, inode 51710277): 4 files, no impossibilities.
-# . (device 16777220, inode 51416518): 19 files, no impossibilities.
+# ./bin (device 16777230, inode 5863725): 4 files, no impossibilities.
+# . (device 16777230, inode 3591877): 19 files, no impossibilities.
 
 # 23 files, no impossibilities in 2 directories.
 
@@ -276,6 +325,7 @@ bundle: manifests kustomize
 #  commands to execute (from `Makefile', line 148):
 	operator-sdk generate kustomize manifests -q
 	cd config/manager && $(KUSTOMIZE) edit set image controller=$(IMG)
+ 
 	$(KUSTOMIZE) build config/manifests | operator-sdk generate bundle -q --overwrite --version $(VERSION) $(BUNDLE_METADATA_OPTS)
 	operator-sdk bundle validate ./bundle
 	
@@ -297,7 +347,7 @@ uninstall: manifests kustomize
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-05-13 17:50:17
+#  Last modified 2022-06-29 14:15:35
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -352,11 +402,11 @@ help:
 #  Modification time never checked.
 #  File has not been updated.
 #  commands to execute (from `Makefile', line 72):
- 
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 	
 
 kustomize:
+ 
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -465,6 +515,6 @@ install: manifests kustomize
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Fri May 13 21:17:25 2022
+# Finished Make data base on Wed Jun 29 14:15:46 2022
 
  
