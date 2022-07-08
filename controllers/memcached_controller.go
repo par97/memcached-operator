@@ -92,7 +92,7 @@ func (r *MemcachedReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 
 	for _, node := range nodeList.Items {
 		node.Labels["t1"] = value
-		//err := r.Patch(ctx, &node, client.Merge)
+		err := r.Patch(ctx, &node, client.Merge)
 		if err != nil {
 			return ctrl.Result{}, err
 		}
