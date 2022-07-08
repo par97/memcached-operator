@@ -19,6 +19,7 @@ package controllers
 import (
 	"context"
 
+	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -75,6 +76,27 @@ func (r *MemcachedReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		mem.Status.State = mem.Spec.Foo
 	} else {
 		mem.Status.State = EMPTY
+	}
+
+	nodeList := &corev1.NodeList{}
+
+	var WorkerRoleLabel = "node-role.kubernetes.io/worker"
+	//only query nodes with worker role, but this node could also be master/infra
+	listOpts := []client.ListOption{
+		client.HasLabels([]string{WorkerRoleLabel}),
+	}
+
+	if err := r.List(context.TODO(), nodeList, listOpts...); err != nil {
+		return ctrl.Result{}, err
+	}
+
+	for _, node := range nodeList.Items {
+		node.Labels["t1"] = value
+		err := r.Patch(ctx, &node, client.Merge)
+		if err != nil {
+			return ctrl.Result{}, err
+		}
+		log.Info("node " + node.Name + " label t1=" + value)
 	}
 
 	return ctrl.Result{}, r.Status().Update(ctx, mem)
