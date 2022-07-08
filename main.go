@@ -33,7 +33,9 @@ import (
 
 	cachev1alpha1 "github.com/example/memcached-operator/api/v1alpha1"
 	"github.com/example/memcached-operator/controllers"
+
 	//+kubebuilder:scaffold:imports
+	mcfgv1 "github.com/openshift/machine-config-operator/pkg/apis/machineconfiguration.openshift.io/v1"
 )
 
 var (
@@ -45,6 +47,8 @@ func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
 
 	utilruntime.Must(cachev1alpha1.AddToScheme(scheme))
+	utilruntime.Must(mcfgv1.AddToScheme(scheme))
+
 	//+kubebuilder:scaffold:scheme
 }
 

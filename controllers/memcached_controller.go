@@ -19,14 +19,17 @@ package controllers
 import (
 	"context"
 
+	cachev1alpha1 "github.com/example/memcached-operator/api/v1alpha1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	ctrllog "sigs.k8s.io/controller-runtime/pkg/log"
 
-	cachev1alpha1 "github.com/example/memcached-operator/api/v1alpha1"
+	//mcfgv1 "github.com/openshift/machine-config-operator/pkg/apis/machineconfiguration.openshift.io/v1"
+	mcfgv1 "github.com/openshift/machine-config-operator/pkg/apis/machineconfiguration.openshift.io/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	ctrllog "sigs.k8s.io/controller-runtime/pkg/log"
 )
 
 // MemcachedReconciler reconciles a Memcached object
@@ -41,6 +44,8 @@ const EMPTY = "EMPTY"
 //+kubebuilder:rbac:groups=cache.example.com,resources=memcacheds/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=cache.example.com,resources=memcacheds/finalizers,verbs=update
 //+kubebuilder:rbac:groups="",resources=nodes,verbs=get;list;patch;watch;update
+//+kubebuilder:rbac:groups=machineconfiguration.openshift.io,resources=machineconfigs,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=machineconfiguration.openshift.io,resources=containerruntimeconfigs,verbs=get;list;watch;create;update;patch;delete
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -73,12 +78,6 @@ func (r *MemcachedReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	value := mem.Spec.Foo
 	log.Info("memcached CR spec Foo: " + value)
 
-	if value != "" {
-		mem.Status.State = mem.Spec.Foo
-	} else {
-		mem.Status.State = EMPTY
-	}
-
 	nodeList := &corev1.NodeList{}
 
 	var WorkerRoleLabel = "node-role.kubernetes.io/worker"
@@ -93,14 +92,26 @@ func (r *MemcachedReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 
 	for _, node := range nodeList.Items {
 		node.Labels["t1"] = value
-		err := r.Patch(ctx, &node, client.Merge)
+		//err := r.Patch(ctx, &node, client.Merge)
 		if err != nil {
 			return ctrl.Result{}, err
 		}
 		log.Info("node " + node.Name + " label t1=" + value)
 	}
 
-	return ctrl.Result{}, r.Status().Update(ctx, mem)
+	t1 := &mcfgv1.MachineConfig{
+		ObjectMeta: metav1.ObjectMeta{Name: value},
+		Spec: mcfgv1.MachineConfigSpec{
+			OSImageURL: "//:dummy0",
+		},
+	}
+	err = r.Create(ctx, t1)
+	if err != nil {
+		log.Error(err, "fail to create machine config "+value)
+	}
+	log.Info("machine config " + value + " is created")
+
+	return ctrl.Result{}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.
