@@ -26,7 +26,6 @@ package controllers
 
 import (
 	"context"
-	"os"
 	"path/filepath"
 	"testing"
 
@@ -73,8 +72,8 @@ func TestAPIs(t *testing.T) {
 
 var _ = BeforeSuite(func() {
 
-	Expect(SetEnvForEnvTest()).To(Succeed())
-	Expect(SetEnvForGinkgoVSCodePlugin()).To(Succeed())
+	//Expect(SetEnvForEnvTest()).To(Succeed())
+	//Expect(SetEnvForGinkgoVSCodePlugin()).To(Succeed())
 
 	logf.SetLogger(zap.New(zap.WriteTo(GinkgoWriter), zap.UseDevMode(true)))
 
@@ -171,25 +170,25 @@ var _ = AfterSuite(func() {
 	Expect(err).NotTo(HaveOccurred())
 })
 
-func SetEnvForGinkgoVSCodePlugin() error {
-	if err := os.Setenv("ACK_GINKGO_DEPRECATIONS", "1.16.4"); err != nil {
-		return err
-	}
-	if err := os.Setenv("ACK_GINKGO_RC", "true"); err != nil {
-		return err
-	}
-	return nil
-}
+// func SetEnvForGinkgoVSCodePlugin() error {
+// 	if err := os.Setenv("ACK_GINKGO_DEPRECATIONS", "1.16.4"); err != nil {
+// 		return err
+// 	}
+// 	if err := os.Setenv("ACK_GINKGO_RC", "true"); err != nil {
+// 		return err
+// 	}
+// 	return nil
+// }
 
-func SetEnvForEnvTest() error {
-	if err := os.Setenv("TEST_ASSET_KUBE_APISERVER", "../testbin/bin/kube-apiserver"); err != nil {
-		return err
-	}
-	if err := os.Setenv("TEST_ASSET_ETCD", "../testbin/bin/etcd"); err != nil {
-		return err
-	}
-	if err := os.Setenv("TEST_ASSET_KUBECTL", "../testbin/bin/kubectl"); err != nil {
-		return err
-	}
-	return nil
-}
+// func SetEnvForEnvTest() error {
+// 	if err := os.Setenv("TEST_ASSET_KUBE_APISERVER", "../testbin/bin/kube-apiserver"); err != nil {
+// 		return err
+// 	}
+// 	if err := os.Setenv("TEST_ASSET_ETCD", "../testbin/bin/etcd"); err != nil {
+// 		return err
+// 	}
+// 	if err := os.Setenv("TEST_ASSET_KUBECTL", "../testbin/bin/kubectl"); err != nil {
+// 		return err
+// 	}
+// 	return nil
+// }
